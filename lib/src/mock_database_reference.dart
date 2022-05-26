@@ -86,6 +86,45 @@ class MockDatabaseReference extends Mock implements DatabaseReference {
     }
   }
 
+  @override
+  Future<void> update(dynamic value, {dynamic priority}) async {
+    if (_nodePath == '/') {
+      _data = value;
+    } else {
+      var nodePathWithoutSlashesAtEndAndStart =
+          _nodePath.substring(1, _nodePath.length - 1);
+      var nodesList = nodePathWithoutSlashesAtEndAndStart.split('/');
+      Map<String, dynamic>? tempData = <String, dynamic>{};
+      Map<String, dynamic>? lastNodeInCurrentData;
+      var nodeIndexReference = _Int(0);
+      if (_data![nodesList.first] == null) {
+        lastNodeInCurrentData = _data;
+      } else {
+        lastNodeInCurrentData = _getNextNodeData(
+            data: _data, nodesList: nodesList, nodeIndex: nodeIndexReference);
+      }
+      var nodeIndex = nodeIndexReference.value;
+      var noNewNodeToAdd = nodesList.length <= nodeIndex;
+      if (noNewNodeToAdd) {
+        lastNodeInCurrentData![nodesList.last] = value;
+      } else {
+        var firstNodeInNewData = nodesList[nodeIndex++];
+        if (nodeIndex < nodesList.length) {
+          tempData = _buildNewNodesTree(
+            nodeIndex: nodeIndex,
+            nodesList: nodesList,
+            data: tempData,
+            value: value,
+          );
+          lastNodeInCurrentData!.addAll({firstNodeInNewData: tempData});
+        } else {
+          if (value is Map) value = value;
+          lastNodeInCurrentData!.addAll({firstNodeInNewData: value});
+        }
+      }
+    }
+  }
+
   Map<String, dynamic>? _buildNewNodesTree({
     required dynamic data,
     required List<String> nodesList,
