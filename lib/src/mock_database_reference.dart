@@ -91,9 +91,7 @@ class MockDatabaseReference extends Mock implements DatabaseReference {
     if (_nodePath == '/') {
       _data = value;
     } else {
-      var nodePathWithoutSlashesAtEndAndStart =
-          _nodePath.substring(1, _nodePath.length - 1);
-      var nodesList = nodePathWithoutSlashesAtEndAndStart.split('/');
+      var nodesList = _nodePath.split('/');
       Map<String, dynamic>? tempData = <String, dynamic>{};
       Map<String, dynamic>? lastNodeInCurrentData;
       var nodeIndexReference = _Int(0);
