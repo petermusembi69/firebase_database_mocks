@@ -67,7 +67,7 @@ class MockDatabaseReference extends Mock implements DatabaseReference {
       var nodeIndex = nodeIndexReference.value;
       var noNewNodeToAdd = nodesList.length <= nodeIndex;
       if (noNewNodeToAdd) {
-        value.forEach((k, v) => lastNodeInCurrentData![k] = v);
+        lastNodeInCurrentData![nodesList.last] = value;
       } else {
         var firstNodeInNewData = nodesList[nodeIndex++];
         if (nodeIndex < nodesList.length) {
@@ -104,7 +104,7 @@ class MockDatabaseReference extends Mock implements DatabaseReference {
       var nodeIndex = nodeIndexReference.value;
       var noNewNodeToAdd = nodesList.length <= nodeIndex;
       if (noNewNodeToAdd) {
-        lastNodeInCurrentData![nodesList.last] = value;
+        value.forEach((k, v) => lastNodeInCurrentData![k] = v);
       } else {
         var firstNodeInNewData = nodesList[nodeIndex++];
         if (nodeIndex < nodesList.length) {
